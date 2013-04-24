@@ -1,0 +1,14 @@
+#!/bin/env ruby
+require 'pry'
+require 'testlab'
+
+current_dir = File.dirname(__FILE__)
+log_file = File.join(current_dir, "..", "testlab.log")
+logger = ZTK::Logger.new(log_file)
+
+ui = ZTK::UI.new(:logger => logger) # ui interface class
+l = TestLab.new(ui)                 # lab
+n = l.nodes.first                   # node
+c = n.containers.first              # container
+lxc = n.lxc                         # node lxc controller
+binding.pry
