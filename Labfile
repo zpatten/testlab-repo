@@ -1,0 +1,124 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+# Labfile Format
+#################
+# This is a somewhat complex example; we define a single LXC node which will use
+# vagrant to power our containers.  We define two network segments, a "backbone"
+# router, a server in both our "east" and "west" virtual networks.  We also
+# define our chef-server container and link it directly to both the "east" and
+# "west" network segments.  We will use chef to provision the containers, thou
+# one could simply omit the provisioners completely to spin up a set of machines
+# for manual testing or other purposes.
+#
+# We also support building all of this dynamicly at runtime.
+#
+# This Labfile would be use mainly in cases of testing; where you have a very
+# specific topology that you are trying to replicate and test against.
+
+
+# Here we define our node; in this case we are using the localhost.  We've
+# selected the Vagrant provider so the Vagrant VM will be our target LXC node.
+node :localhost do
+
+  # This sets the provider for our node.  This could be many things, from
+  # Vagrant, to AWS, to Local, to custom internal providers.  Any class can be
+  # supplied assuming it's interface honors our contract.
+  provider    TestLab::Provider::Vagrant
+
+  # this is a generic configuration object (hash) which is supplied to
+  # the provider
+  config      Hash[
+    :vagrant => {
+      :id       => "mytestlab-#{ENV['USER']}".downcase,
+      :ip       => "192.168.33.10",
+      :user     => "vagrant",
+      :port     => 22,
+      :cpus     => 8,
+      :memory   => 16384
+    },
+    :repo => File.join(ENV['HOME'], "code", "personal", "testlab-repo")
+  ]
+
+  # Here we define our network segments; these will manifest into network
+  # bridges on the target LXC node.
+  network :east do
+    cidr        "192.168.255.254/16"
+    bridge      :br0
+  end
+
+  network :west do
+    cidr        "10.255.255.254/8"
+    bridge      :br1
+  end
+
+  # This is a "special" device; this effectivly is shorthand for make me a
+  # container that will forward packets.
+  #
+  # We are going to use this for our "backbone internet" router.
+  router :backbone do
+
+    # interfaces define what networks this container is linked to and what our
+    # configuration on that network should be.
+    interfaces Hash[
+      :east => {
+        :ip => "192.168.0.1/16",
+        :name => :eth0
+      },
+      :west => {
+        :ip => "10.0.0.1/8",
+        :name => :eth1
+      }
+    ]
+  end
+
+  # here we define our "servers" (i.e. linux containers)
+  container "server-east-1" do
+    distro        "ubuntu"
+    release       "lucid"
+
+    # if we wanted to use a custom user and identity we might be able to set
+    # those here:
+    #
+    # user blah
+    # identity blah
+
+    # interfaces define what networks this container is linked to and what our
+    # configuration on that network should be.
+    interfaces Hash[
+      :east => {
+        :ip => "192.168.0.254/16",
+        :name => :eth0
+      }
+    ]
+  end
+
+  container "server-west-1" do
+    distro        "ubuntu"
+    release       "precise"
+
+    interfaces Hash[
+      :west => {
+        :ip => "10.0.0.254/8",
+        :name => :eth0
+      }
+    ]
+  end
+
+  container "chef-server" do
+    distro        "ubuntu"
+    release       "precise"
+
+    interfaces Hash[
+      :west => {
+        :ip => "10.0.0.200/8",
+        :name => :eth0
+      },
+      :east => {
+        :ip => "192.168.0.200/16",
+        :name => :eth1
+      }
+    ]
+  end
+
+end
