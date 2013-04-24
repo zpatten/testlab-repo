@@ -29,3 +29,5 @@ source "https://rubygems.org"
 gem_dev "testlab"
 gem_dev "lxc"
 gem_dev "ztk"
+
+gem "pry"
