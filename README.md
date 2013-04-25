@@ -2,6 +2,8 @@
 
 This is all very much WIP.
 
+If you are going to play with this; I would suggest cloning the `TestLab` and `LXC` to `vendor/checkouts` and `export GEMDEV=1`.
+
     $ be ./bin/tl-console
       GEMDEV:                          testlab, {:path=>"vendor/checkouts/testlab"}
       GEMDEV:                              lxc, {:path=>"vendor/checkouts/lxc"}
