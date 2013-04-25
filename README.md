@@ -2,7 +2,10 @@
 
 This is all very much WIP.
 
-If you are going to play with this; I would suggest cloning the `TestLab` and `LXC` to `vendor/checkouts` and `export GEMDEV=1`.
+If you are going to play with this; I would suggest cloning the `TestLab` and `LXC` gems to `vendor/checkouts` and `export GEMDEV=1`.  Chasing the `master` branch is the way to go for now.
+
+* https://github.com/zpatten/testlab
+* https://github.com/zpatten/lxc
 
     $ be ./bin/tl-console
       GEMDEV:                          testlab, {:path=>"vendor/checkouts/testlab"}
