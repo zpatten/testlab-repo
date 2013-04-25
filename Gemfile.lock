@@ -1,19 +1,20 @@
 PATH
   remote: vendor/checkouts/lxc
   specs:
-    lxc (0.0.7)
+    lxc (0.0.8)
       ztk
 
 PATH
   remote: vendor/checkouts/testlab
   specs:
-    testlab (0.0.1)
+    testlab (0.0.3)
+      lxc
       ztk
 
 PATH
   remote: vendor/checkouts/ztk
   specs:
-    ztk (1.1.1)
+    ztk (1.1.2)
       activesupport
       erubis
       net-sftp
