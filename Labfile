@@ -75,7 +75,7 @@ node :localhost do
   # here we define our "servers" (i.e. linux containers)
   container "server-east-1" do
     distro        "ubuntu"
-    release       "lucid"
+    release       "precise"
 
     # if we wanted to use a custom user and identity we might be able to set
     # those here:
