@@ -9,6 +9,7 @@ logger = ZTK::Logger.new(log_file)
 ui = ZTK::UI.new(:logger => logger) # ui interface class
 l = TestLab.new(:ui => ui)          # lab
 n = l.nodes.first                   # node
-c = n.containers.first              # container
-lxc = n.lxc                         # node lxc controller
+c1 = TestLab::Container.first('server-east-1')
+c2 = TestLab::Container.first('server-west-1')
+c3 = TestLab::Container.first('chef-server')
 binding.pry
