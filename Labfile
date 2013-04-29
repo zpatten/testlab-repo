@@ -16,10 +16,14 @@
 # This Labfile would be use mainly in cases of testing; where you have a very
 # specific topology that you are trying to replicate and test against.
 
+config Hash[
+  :domain => "default.zone"
+]
 
 # Here we define our node; in this case we are using the localhost.  We've
 # selected the Vagrant provider so the Vagrant VM will be our target LXC node.
 node :localhost do
+  components %w(resolv bind)
 
   # This sets the provider for our node.  This could be many things, from
   # Vagrant, to AWS, to Local, to custom internal providers.  Any class can be
@@ -35,7 +39,8 @@ node :localhost do
       :user     => "vagrant",
       :port     => 22,
       :cpus     => 8,
-      :memory   => 16384
+      :memory   => 16384,
+      :box      => 'raring64'
     },
     :repo => File.join(ENV['HOME'], "code", "personal", "testlab-repo")
   ]
@@ -43,12 +48,12 @@ node :localhost do
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network :east do
-    cidr        "192.168.255.254/16"
+    ip          '10.10.0.1/16'
     bridge      :br0
   end
 
   network :west do
-    cidr        "10.255.255.254/8"
+    ip          '10.11.0.1/16'
     bridge      :br1
   end
 
@@ -62,11 +67,13 @@ node :localhost do
     # configuration on that network should be.
     interfaces Hash[
       :east => {
-        :ip => "192.168.0.1/16",
+        :ip => '10.10.0.2/16',
+        :mac => '00:00:5e:8e:6c:f4',
         :name => :eth0
       },
       :west => {
-        :ip => "10.0.0.1/8",
+        :ip => '10.11.0.2/24',
+        :mac => '00:00:5e:f2:de:a3',
         :name => :eth1
       }
     ]
@@ -74,32 +81,50 @@ node :localhost do
 
   # here we define our "servers" (i.e. linux containers)
   container "server-east-1" do
+    domain        "east.zone"
+
     distro        "ubuntu"
     release       "precise"
+
+    provisioner   TestLab::Provisioner::Shell
 
     # if we wanted to use a custom user and identity we might be able to set
     # those here:
     #
-    # user blah
-    # identity blah
+    # user "ubuntu"
+    # keys File.join(ENV['HOME'], ".vagrant.d", "insecure_private_key")
 
     # interfaces define what networks this container is linked to and what our
     # configuration on that network should be.
     interfaces Hash[
       :east => {
-        :ip => "192.168.0.254/16",
+        :ip => '10.10.0.254/16',
+        :mac => '00:00:5e:b7:e5:15',
         :name => :eth0
       }
     ]
   end
 
   container "server-west-1" do
+    domain        "west.zone"
+
     distro        "ubuntu"
     release       "precise"
 
+    provisioner   TestLab::Provisioner::Shell
+    config        Hash[
+      :shell => "/bin/bash",
+      :setup => <<-EOF
+set -x
+apt-get -y update
+apt-get -y install dnsutils
+EOF
+    ]
+
     interfaces Hash[
       :west => {
-        :ip => "10.0.0.254/8",
+        :ip => '10.11.0.254/16',
+        :mac => '00:00:5e:48:e9:6f',
         :name => :eth0
       }
     ]
@@ -109,14 +134,19 @@ node :localhost do
     distro        "ubuntu"
     release       "precise"
 
+    provisioner   TestLab::Provisioner::Shell
+
     interfaces Hash[
-      :west => {
-        :ip => "10.0.0.200/8",
+      :east => {
+        :ip => '10.10.0.200/16',
+        :mac => '00:00:5e:63:b5:9f',
         :name => :eth0
       },
-      :east => {
-        :ip => "192.168.0.200/16",
-        :name => :eth1
+      :west => {
+        :ip => '10.11.0.200/16',
+        :mac => '00:00:5e:08:63:df',
+        :name => :eth1,
+        :primary => true
       }
     ]
   end
