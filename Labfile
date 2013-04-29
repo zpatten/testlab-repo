@@ -87,6 +87,14 @@ node :localhost do
     release       "precise"
 
     provisioner   TestLab::Provisioner::Shell
+    config        Hash[
+      :shell => "/bin/bash",
+      :setup => <<-EOF
+set -x
+apt-get -y update
+apt-get -y install dnsutils
+EOF
+    ]
 
     # if we wanted to use a custom user and identity we might be able to set
     # those here:
@@ -135,6 +143,14 @@ EOF
     release       "precise"
 
     provisioner   TestLab::Provisioner::Shell
+    config        Hash[
+      :shell => "/bin/bash",
+      :setup => <<-EOF
+set -x
+apt-get -y update
+apt-get -y install dnsutils
+EOF
+    ]
 
     interfaces Hash[
       :east => {
