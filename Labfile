@@ -16,6 +16,12 @@
 # This Labfile would be use mainly in cases of testing; where you have a very
 # specific topology that you are trying to replicate and test against.
 
+shell_provision_script = <<-EOF
+set -x
+apt-get -y update
+apt-get -y install dnsutils
+EOF
+
 config Hash[
   :domain => "default.zone"
 ]
@@ -35,7 +41,7 @@ node :localhost do
   config      Hash[
     :vagrant => {
       :id       => "mytestlab-#{ENV['USER']}".downcase,
-      :ip       => "192.168.33.10",
+      :ip       => "192.168.13.37",
       :user     => "vagrant",
       :port     => 22,
       :cpus     => 8,
@@ -45,39 +51,55 @@ node :localhost do
     :repo => File.join(ENV['HOME'], "code", "personal", "testlab-repo")
   ]
 
+  # Add routes for the networks this node is running
+  route        false
+
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network :east do
-    ip          '10.10.0.1/16'
-    bridge      :br0
+    address '10.10.0.1/16'
+    bridge  :br0
   end
 
   network :west do
-    ip          '10.11.0.1/16'
-    bridge      :br1
+    address '10.11.0.1/16'
+    bridge  :br1
   end
 
   # This is a "special" device; this effectivly is shorthand for make me a
   # container that will forward packets.
   #
   # We are going to use this for our "backbone internet" router.
-  router :backbone do
+  # router :backbone do
 
-    # interfaces define what networks this container is linked to and what our
-    # configuration on that network should be.
-    interfaces Hash[
-      :east => {
-        :ip => '10.10.0.2/16',
-        :mac => '00:00:5e:8e:6c:f4',
-        :name => :eth0
-      },
-      :west => {
-        :ip => '10.11.0.2/24',
-        :mac => '00:00:5e:f2:de:a3',
-        :name => :eth1
-      }
-    ]
-  end
+  #   # interfaces define what networks this container is linked to and what our
+  #   # configuration on that network should be.
+
+  #   interface :east do
+  #     cidr '10.10.0.2/16'
+  #     mac  '00:00:5e:8e:6c:f4'
+  #     name :eth0
+  #   end
+
+  #   interface :west do
+  #     cidr '10.11.0.2/16'
+  #     mac  '00:00:5e:f2:de:a3'
+  #     name :eth1
+  #   end
+
+  #   # interfaces Hash[
+  #   #   :east => {
+  #   #     :ip => '10.10.0.2/16',
+  #   #     :mac => '00:00:5e:8e:6c:f4',
+  #   #     :name => :eth0
+  #   #   },
+  #   #   :west => {
+  #   #     :ip => '10.11.0.2/24',
+  #   #     :mac => '00:00:5e:f2:de:a3',
+  #   #     :name => :eth1
+  #   #   }
+  #   # ]
+  # end
 
   # here we define our "servers" (i.e. linux containers)
   container "server-east-1" do
@@ -89,11 +111,7 @@ node :localhost do
     provisioner   TestLab::Provisioner::Shell
     config        Hash[
       :shell => "/bin/bash",
-      :setup => <<-EOF
-set -x
-apt-get -y update
-apt-get -y install dnsutils
-EOF
+      :setup => shell_provision_script
     ]
 
     # if we wanted to use a custom user and identity we might be able to set
@@ -104,13 +122,13 @@ EOF
 
     # interfaces define what networks this container is linked to and what our
     # configuration on that network should be.
-    interfaces Hash[
-      :east => {
-        :ip => '10.10.0.254/16',
-        :mac => '00:00:5e:b7:e5:15',
-        :name => :eth0
-      }
-    ]
+
+    interface do
+      name       :eth0
+      network_id :east
+      address    '10.10.0.254/16'
+      mac        '00:00:5e:b7:e5:15'
+    end
   end
 
   container "server-west-1" do
@@ -122,22 +140,20 @@ EOF
     provisioner   TestLab::Provisioner::Shell
     config        Hash[
       :shell => "/bin/bash",
-      :setup => <<-EOF
-set -x
-apt-get -y update
-apt-get -y install dnsutils
-EOF
+      :setup => shell_provision_script
     ]
 
-    interfaces Hash[
-      :west => {
-        :ip => '10.11.0.254/16',
-        :mac => '00:00:5e:48:e9:6f',
-        :name => :eth0
-      }
-    ]
+    interface do
+      network_id :west
+      name       :eth0
+      address    '10.11.0.254/16'
+      mac        '00:00:5e:48:e9:6f'
+    end
+
   end
 
+  # chef-server.default.zone
+  ###########################
   container "chef-server" do
     distro        "ubuntu"
     release       "precise"
@@ -145,26 +161,23 @@ EOF
     provisioner   TestLab::Provisioner::Shell
     config        Hash[
       :shell => "/bin/bash",
-      :setup => <<-EOF
-set -x
-apt-get -y update
-apt-get -y install dnsutils
-EOF
+      :setup => shell_provision_script
     ]
 
-    interfaces Hash[
-      :east => {
-        :ip => '10.10.0.200/16',
-        :mac => '00:00:5e:63:b5:9f',
-        :name => :eth0
-      },
-      :west => {
-        :ip => '10.11.0.200/16',
-        :mac => '00:00:5e:08:63:df',
-        :name => :eth1,
-        :primary => true
-      }
-    ]
+    interface do
+      network_id :east
+      name       :eth0
+      address    '10.10.0.200/16'
+      mac        '00:00:5e:63:b5:9f'
+    end
+
+    interface do
+      network_id :west
+      primary    true
+      name       :eth1
+      address    '10.11.0.200/16'
+      mac        '00:00:5e:08:63:df'
+    end
   end
 
 end
