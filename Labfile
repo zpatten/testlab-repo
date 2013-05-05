@@ -75,10 +75,7 @@ node :localhost do
     release       "precise"
 
     provisioner   TestLab::Provisioner::Shell
-    config        Hash[
-      :shell => "/bin/bash",
-      :setup => shell_provision_script
-    ]
+    config        Hash[:setup => shell_provision_script]
 
     # if we wanted to use a custom user and identity we might be able to set
     # those here:
@@ -106,10 +103,7 @@ node :localhost do
     release       "precise"
 
     provisioner   TestLab::Provisioner::Shell
-    config        Hash[
-      :shell => "/bin/bash",
-      :setup => shell_provision_script
-    ]
+    config        Hash[:setup => shell_provision_script]
 
     interface do
       network_id :west
@@ -127,10 +121,7 @@ node :localhost do
     release       "precise"
 
     provisioner   TestLab::Provisioner::Shell
-    config        Hash[
-      :shell => "/bin/bash",
-      :setup => shell_provision_script
-    ]
+    config        Hash[:setup => shell_provision_script]
 
     interface do
       network_id :east
