@@ -16,7 +16,7 @@ PATH
 PATH
   remote: vendor/checkouts/ztk
   specs:
-    ztk (1.4.9)
+    ztk (1.4.10)
       activesupport
       erubis
       net-sftp
