@@ -66,6 +66,32 @@ node :localhost do
     bridge  :br1
   end
 
+  # chef-server.default.zone
+  ###########################
+  container "chef-server" do
+    distro        "ubuntu"
+    release       "precise"
+
+    provisioner   TestLab::Provisioner::OmniTruck
+    # provisioner   TestLab::Provisioner::Shell
+    # config        Hash[:setup => shell_provision_script]
+
+    interface do
+      network_id :west
+      name       :eth0
+      address    '10.11.0.200/16'
+      mac        '00:00:5e:63:b5:9f'
+      primary
+    end
+
+    # interface do
+    #   network_id :west
+    #   name       :eth1
+    #   address    '10.11.0.201/16'
+    #   mac        '00:00:5e:08:63:df'
+    # end
+  end
+
   # server-east-1.east.zone
   ##########################
   container "server-east-1" do
@@ -74,8 +100,9 @@ node :localhost do
     distro        "ubuntu"
     release       "precise"
 
-    provisioner   TestLab::Provisioner::Shell
-    config        Hash[:setup => shell_provision_script]
+    provisioner   TestLab::Provisioner::OmniBus
+    # provisioner   TestLab::Provisioner::Shell
+    # config        Hash[:setup => shell_provision_script]
 
     # if we wanted to use a custom user and identity we might be able to set
     # those here:
@@ -112,31 +139,6 @@ node :localhost do
       mac        '00:00:5e:48:e9:6f'
     end
 
-  end
-
-  # chef-server.default.zone
-  ###########################
-  container "chef-server" do
-    distro        "ubuntu"
-    release       "precise"
-
-    provisioner   TestLab::Provisioner::Shell
-    config        Hash[:setup => shell_provision_script]
-
-    interface do
-      network_id :east
-      name       :eth0
-      address    '10.10.0.200/16'
-      mac        '00:00:5e:63:b5:9f'
-    end
-
-    interface do
-      network_id :west
-      primary    true
-      name       :eth1
-      address    '10.11.0.200/16'
-      mac        '00:00:5e:08:63:df'
-    end
   end
 
 end
