@@ -1,3 +1,5 @@
+[![Dependency Status](https://gemnasium.com/zpatten/testlab-repo.png)](https://gemnasium.com/zpatten/testlab-repo)
+
 # TestLab Example
 
 This is all very much WIP.
