@@ -66,42 +66,8 @@ node :localhost do
     bridge  :br1
   end
 
-  # This is a "special" device; this effectivly is shorthand for make me a
-  # container that will forward packets.
-  #
-  # We are going to use this for our "backbone internet" router.
-  # router :backbone do
-
-  #   # interfaces define what networks this container is linked to and what our
-  #   # configuration on that network should be.
-
-  #   interface :east do
-  #     cidr '10.10.0.2/16'
-  #     mac  '00:00:5e:8e:6c:f4'
-  #     name :eth0
-  #   end
-
-  #   interface :west do
-  #     cidr '10.11.0.2/16'
-  #     mac  '00:00:5e:f2:de:a3'
-  #     name :eth1
-  #   end
-
-  #   # interfaces Hash[
-  #   #   :east => {
-  #   #     :ip => '10.10.0.2/16',
-  #   #     :mac => '00:00:5e:8e:6c:f4',
-  #   #     :name => :eth0
-  #   #   },
-  #   #   :west => {
-  #   #     :ip => '10.11.0.2/24',
-  #   #     :mac => '00:00:5e:f2:de:a3',
-  #   #     :name => :eth1
-  #   #   }
-  #   # ]
-  # end
-
-  # here we define our "servers" (i.e. linux containers)
+  # server-east-1.east.zone
+  ##########################
   container "server-east-1" do
     domain        "east.zone"
 
@@ -131,6 +97,8 @@ node :localhost do
     end
   end
 
+  # server-west-1.west.zone
+  ##########################
   container "server-west-1" do
     domain        "west.zone"
 
