@@ -40,7 +40,7 @@ node :localhost do
   # the provider
   config      Hash[
     :vagrant => {
-      :id       => "mytestlab-#{ENV['USER']}".downcase,
+      :id       => "testlab-repo-#{ENV['USER']}".downcase,
       :ip       => "192.168.13.37",
       :user     => "vagrant",
       :port     => 22,
@@ -51,19 +51,18 @@ node :localhost do
     :repo => File.join(ENV['HOME'], "code", "personal", "testlab-repo")
   ]
 
-  # Add routes for the networks this node is running
-  route        false
-
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network :east do
-    address '10.10.0.1/16'
-    bridge  :br0
+    address  '10.10.0.1/16'
+    bridge   :br0
+    route    true
   end
 
   network :west do
-    address '10.11.0.1/16'
-    bridge  :br1
+    address  '10.11.0.1/16'
+    bridge   :br1
+    route    true
   end
 
   # chef-server.default.zone
