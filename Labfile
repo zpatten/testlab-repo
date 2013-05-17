@@ -22,8 +22,12 @@ apt-get -y update
 apt-get -y install dnsutils
 EOF
 
+REPO = Dir.pwd
+HOSTNAME = %x(hostname).split('.').first.strip
+
 config Hash[
-  :domain => "default.zone"
+  :domain => "default.zone",
+  :repo => REPO
 ]
 
 # Here we define our node; in this case we are using the localhost.  We've
@@ -40,15 +44,13 @@ node :localhost do
   # the provider
   config      Hash[
     :vagrant => {
-      :id       => "testlab-repo-#{ENV['USER']}".downcase,
+      :id       => "testlab-repo-#{ENV['USER']}-#{HOSTNAME}".downcase,
       :ip       => "192.168.13.37",
-      :user     => "vagrant",
-      :port     => 22,
-      :cpus     => 8,
-      :memory   => 16384,
-      :box      => 'raring64'
-    },
-    :repo => File.join(ENV['HOME'], "code", "personal", "testlab-repo")
+      :cpus     => 2,
+      :memory   => (1.5 * 1024.0).to_i,
+      :box      => 'raring64',
+      :file     => REPO
+    }
   ]
 
   # Here we define our network segments; these will manifest into network
