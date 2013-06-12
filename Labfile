@@ -45,9 +45,8 @@ node :localhost do
   config      Hash[
     :vagrant => {
       :id       => "testlab-repo-#{ENV['USER']}-#{HOSTNAME}".downcase,
-      :ip       => "192.168.13.37",
       :cpus     => 2,
-      :memory   => (1.5 * 1024.0).to_i,
+      :memory   => (4 * 1024.0).to_i,
       :box      => 'raring64',
       :file     => REPO
     }
@@ -55,13 +54,13 @@ node :localhost do
 
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
-  network :east do
+  network 'east' do
     address  '10.10.0.1/16'
     bridge   :br0
     route    true
   end
 
-  network :west do
+  network 'west' do
     address  '10.11.0.1/16'
     bridge   :br1
     route    true
@@ -73,20 +72,38 @@ node :localhost do
     distro        "ubuntu"
     release       "precise"
 
-    provisioner   TestLab::Provisioner::OmniTruck
-    # provisioner   TestLab::Provisioner::Shell
-    # config        Hash[:setup => shell_provision_script]
+    # provisioners   [
+    #   TestLab::Provisioner::AptCacherNG,
+    #   TestLab::Provisioner::OmniTruck
+    # ]
+    provisioners  [
+      TestLab::Provisioner::AptCacherNG,
+      TestLab::Provisioner::Shell
+    ]
+    config        Hash[
+      :script => shell_provision_script
+    ]
 
+    # Here we define a default user to seed onto the box.  This user will be
+    # given passwordless sudo access as well.
+    user 'deployer' do
+      password  'deployer'
+      uid       2600
+      gid       2600
+    end
+
+    # interfaces define what networks this container is linked to and what our
+    # configuration on that network should be.
     interface do
-      network_id :west
-      name       :eth0
-      address    '10.11.0.200/16'
-      mac        '00:00:5e:63:b5:9f'
-      primary
+      network_id  'west'
+      name        :eth0
+      address     '10.11.0.200/16'
+      mac         '00:00:5e:63:b5:9f'
+      # primary     true
     end
 
     # interface do
-    #   network_id :west
+    #   network_id 'west'
     #   name       :eth1
     #   address    '10.11.0.201/16'
     #   mac        '00:00:5e:08:63:df'
@@ -101,22 +118,27 @@ node :localhost do
     distro        "ubuntu"
     release       "precise"
 
-    provisioner   TestLab::Provisioner::OmniBus
-    # provisioner   TestLab::Provisioner::Shell
-    # config        Hash[:setup => shell_provision_script]
+    # provisioners   [
+    #   TestLab::Provisioner::AptCacherNG,
+    #   TestLab::Provisioner::OmniBus
+    # ]
+    provisioners  [
+      TestLab::Provisioner::AptCacherNG,
+      TestLab::Provisioner::Shell
+    ]
+    config        Hash[
+      :script => shell_provision_script
+    ]
 
-    # if we wanted to use a custom user and identity we might be able to set
-    # those here:
-    #
-    # user "ubuntu"
-    # keys File.join(ENV['HOME'], ".vagrant.d", "insecure_private_key")
-
-    # interfaces define what networks this container is linked to and what our
-    # configuration on that network should be.
+    user 'deployer' do
+      password  'deployer'
+      uid       2600
+      gid       2600
+    end
 
     interface do
       name       :eth0
-      network_id :east
+      network_id 'east'
       address    '10.10.0.254/16'
       mac        '00:00:5e:b7:e5:15'
     end
@@ -130,11 +152,22 @@ node :localhost do
     distro        "ubuntu"
     release       "precise"
 
-    provisioner   TestLab::Provisioner::Shell
-    config        Hash[:setup => shell_provision_script]
+    provisioners  [
+      TestLab::Provisioner::AptCacherNG,
+      TestLab::Provisioner::Shell
+    ]
+    config        Hash[
+      :script => shell_provision_script
+    ]
+
+    user 'deployer' do
+      password  'deployer'
+      uid       2600
+      gid       2600
+    end
 
     interface do
-      network_id :west
+      network_id 'west'
       name       :eth0
       address    '10.11.0.254/16'
       mac        '00:00:5e:48:e9:6f'
