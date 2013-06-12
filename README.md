@@ -11,46 +11,34 @@ If you are going to play with this; I would suggest cloning the `TestLab` and `L
 
 If you want to see what is going on during all of this; open another terminal, locate the testlab.log file and proceed to tail it.
 
-    [~/code/personal/testlab-repo] $ tl status && tl create && tl setup && tl status
-    [TL] TestLab v0.3.1 Loaded
+    $ tl setup
+    [TL] TestLab v0.5.4 Loaded
+    [TL] node localhost create                                   # Completed in 2.4198 seconds!
+    [TL] node localhost up                                       # Completed in 1.9134 seconds!
+    [TL] node localhost setup                                    # Completed in 60.3821 seconds!
+    [TL] network east create                                     # Completed in 0.1013 seconds!
+    [TL] network east up                                         # Completed in 0.1011 seconds!
+    [TL] network west create                                     # Completed in 0.1010 seconds!
+    [TL] network west up                                         # Completed in 0.1012 seconds!
+    [TL] container chef-server create                            # Completed in 0.1007 seconds!
+    [TL] container chef-server up                                # Completed in 0.4011 seconds!
+    [TL] container chef-server setup                             # Completed in 59.1569 seconds!
+    [TL] container server-east-1 create                          # Completed in 7.3594 seconds!
+    [TL] container server-east-1 up                              # Completed in 0.4014 seconds!
+    [TL] container server-east-1 setup                           # Completed in 16.1263 seconds!
+    [TL] container server-west-1 create                          # Completed in 8.0642 seconds!
+    [TL] container server-west-1 up                              # Completed in 0.5014 seconds!
+    [TL] container server-west-1 setup                           # Completed in 15.1147 seconds!
+
+    $ tl status
+    [TL] TestLab v0.5.4 Loaded
 
     NODES:
-    +-----------+-------------------+-------------+---------+---------------+------+----------------------------+-----+-----+
-    | ID        | INSTANCE_ID       | STATE       | USER    | IP            | PORT | PROVIDER                   | CON | NET |
-    +-----------+-------------------+-------------+---------+---------------+------+----------------------------+-----+-----+
-    | localhost | mytestlab-zpatten | not_created | vagrant | 192.168.13.37 | 22   | TestLab::Provider::Vagrant | 3   | 2   |
-    +-----------+-------------------+-------------+---------+---------------+------+----------------------------+-----+-----+
-
-    NETWORKS:
-    You either have no networks defined or dead nodes!
-
-    CONTAINERS:
-    You either have no containers defined or dead nodes!
-    [TL] TestLab v0.3.1 Loaded
-    [TL] node localhost create                                   # Completed in 62.2860 seconds!
-    [TL] TestLab v0.3.1 Loaded
-    [TL] node localhost setup                                    # Completed in 60.8751 seconds!
-    [TL] network east create                                     # Completed in 0.1008 seconds!
-    [TL] network east up                                         # Completed in 0.1051 seconds!
-    [TL] network west create                                     # Completed in 0.1008 seconds!
-    [TL] network west up                                         # Completed in 0.1009 seconds!
-    [TL] container server-east-1 create                          # Completed in 385.0663 seconds!
-    [TL] container server-east-1 up                              # Completed in 0.4047 seconds!
-    [TL] container server-east-1 setup                           # Completed in 18.1392 seconds!
-    [TL] container server-west-1 create                          # Completed in 7.4557 seconds!
-    [TL] container server-west-1 up                              # Completed in 0.3006 seconds!
-    [TL] container server-west-1 setup                           # Completed in 17.5344 seconds!
-    [TL] container chef-server create                            # Completed in 7.5597 seconds!
-    [TL] container chef-server up                                # Completed in 0.4049 seconds!
-    [TL] container chef-server setup                             # Completed in 13.9065 seconds!
-    [TL] TestLab v0.3.1 Loaded
-
-    NODES:
-    +-----------+-------------------+---------+---------+---------------+------+----------------------------+-----+-----+
-    | ID        | INSTANCE_ID       | STATE   | USER    | IP            | PORT | PROVIDER                   | CON | NET |
-    +-----------+-------------------+---------+---------+---------------+------+----------------------------+-----+-----+
-    | localhost | mytestlab-zpatten | running | vagrant | 192.168.13.37 | 22   | TestLab::Provider::Vagrant | 3   | 2   |
-    +-----------+-------------------+---------+---------+---------------+------+----------------------------+-----+-----+
+    +-----------+----------------------------------+---------+---------+----------------+------+----------------------------+-----+-----+
+    | ID        | INSTANCE_ID                      | STATE   | USER    | IP             | PORT | PROVIDER                   | CON | NET |
+    +-----------+----------------------------------+---------+---------+----------------+------+----------------------------+-----+-----+
+    | localhost | testlab-repo-zpatten-zsp-desktop | running | vagrant | 192.168.33.239 | 22   | TestLab::Provider::Vagrant | 3   | 2   |
+    +-----------+----------------------------------+---------+---------+----------------+------+----------------------------+-----+-----+
 
     NETWORKS:
     +-----------+------+---------+------------------+-----------+-------------+---------------+
@@ -61,11 +49,10 @@ If you want to see what is going on during all of this; open another terminal, l
     +-----------+------+---------+------------------+-----------+-------------+---------------+
 
     CONTAINERS:
-    +-----------+---------------+---------+--------+---------+----------------------------------------------------+-----------------------------+
-    | NODE_ID   | ID            | STATE   | DISTRO | RELEASE | INTERFACES                                         | PROVISIONER                 |
-    +-----------+---------------+---------+--------+---------+----------------------------------------------------+-----------------------------+
-    | localhost | server-east-1 | running | ubuntu | precise | east:eth0:10.10.0.254/16                           | TestLab::Provisioner::Shell |
-    | localhost | server-west-1 | running | ubuntu | precise | west:eth0:10.11.0.254/16                           | TestLab::Provisioner::Shell |
-    | localhost | chef-server   | running | ubuntu | precise | east:eth0:10.10.0.200/16, west:eth1:10.11.0.200/16 | TestLab::Provisioner::Shell |
-    +-----------+---------------+---------+--------+---------+----------------------------------------------------+-----------------------------+
-    [~/code/personal/testlab-repo] $
+    +-----------+---------------+-------+---------+--------+---------+--------------------------+---------------------------------------------------------------+
+    | NODE_ID   | ID            | CLONE | STATE   | DISTRO | RELEASE | INTERFACES               | PROVISIONER                                                   |
+    +-----------+---------------+-------+---------+--------+---------+--------------------------+---------------------------------------------------------------+
+    | localhost | chef-server   | false | running | ubuntu | precise | west:eth0:10.11.0.200/16 | TestLab::Provisioner::AptCacherNG,TestLab::Provisioner::Shell |
+    | localhost | server-east-1 | false | running | ubuntu | precise | east:eth0:10.10.0.254/16 | TestLab::Provisioner::AptCacherNG,TestLab::Provisioner::Shell |
+    | localhost | server-west-1 | false | running | ubuntu | precise | west:eth0:10.11.0.254/16 | TestLab::Provisioner::AptCacherNG,TestLab::Provisioner::Shell |
+    +-----------+---------------+-------+---------+--------+---------+--------------------------+---------------------------------------------------------------+
