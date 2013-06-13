@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 #^syntax detection
 
-# Labfile Example: Single Application/Service
-##############################################
-# A single application is built with all it's components broken out as it would
-# be in a production environment.
+# Labfile Example: Multiple Networks
+#####################################
+# This Labfile illustrates how to define multiple networks and assign them to
+# containers.
 
 shell_provision_script = <<-EOF
 set -x
@@ -52,9 +52,15 @@ node :vagrant do
 
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
-  network 'labnet' do
+  network 'east' do
     address  '10.10.0.1/16'
     bridge   :br0
+    route    true
+  end
+
+  network 'west' do
+    address  '10.11.0.1/16'
+    bridge   :br1
     route    true
   end
 
@@ -94,14 +100,26 @@ node :vagrant do
     # interfaces are at play, the default route for the container will be off
     # the primary interface.
     interface do
-      network_id  'labnet'
+      network_id  'west'
       name        :eth0
-      address     '10.10.0.254/16'
+      address     '10.11.0.200/16'
       mac         '00:00:5e:63:b5:9f'
+      primary     true
+    end
+
+    interface do
+      network_id 'west'
+      name       :eth1
+      address    '10.11.0.201/16'
+      mac        '00:00:5e:08:63:df'
     end
   end
 
-  container "server-lb-1" do
+  # server-east-1.east.zone
+  ##########################
+  container "server-east-1" do
+    domain        "east.zone"
+
     distro        "ubuntu"
     release       "precise"
 
@@ -126,14 +144,18 @@ node :vagrant do
     end
 
     interface do
-      network_id  'labnet'
-      name        :eth0
-      address     '10.10.0.20/16'
-      mac         '00:00:5e:b7:e5:15'
+      name       :eth0
+      network_id 'east'
+      address    '10.10.0.254/16'
+      mac        '00:00:5e:b7:e5:15'
     end
   end
 
-  container "server-www-1" do
+  # server-west-1.west.zone
+  ##########################
+  container "server-west-1" do
+    domain        "west.zone"
+
     distro        "ubuntu"
     release       "precise"
 
@@ -154,39 +176,12 @@ node :vagrant do
     end
 
     interface do
-      network_id  'labnet'
-      name        :eth0
-      address     '10.10.0.21/16'
-      mac         '00:00:5e:48:e9:6f'
-    end
-  end
-
-  container "server-redis-1" do
-    distro        "ubuntu"
-    release       "precise"
-
-    provisioners  [
-      TestLab::Provisioner::Resolv,
-      TestLab::Provisioner::AptCacherNG,
-      TestLab::Provisioner::Apt,
-      TestLab::Provisioner::Shell
-    ]
-    config        ({
-      :script => shell_provision_script
-    })
-
-    user 'deployer' do
-      password  'deployer'
-      uid       2600
-      gid       2600
+      network_id 'west'
+      name       :eth0
+      address    '10.11.0.254/16'
+      mac        '00:00:5e:48:e9:6f'
     end
 
-    interface do
-      network_id  'labnet'
-      name        :eth0
-      address     '10.10.0.22/16'
-      mac         '00:00:5e:48:e9:2b'
-    end
   end
 
 end

@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 #^syntax detection
 
-# Labfile Example: Single Application/Service
-##############################################
-# A single application is built with all it's components broken out as it would
-# be in a production environment.
+# Labfile Example: Multiple Applications/Services
+##################################################
+# Each application/service is setup per container using a 'standalone' role;
+# that is all of it's dependent services should be installed and configured to
+# run on that container alone.
 
 shell_provision_script = <<-EOF
 set -x
@@ -133,7 +134,7 @@ node :vagrant do
     end
   end
 
-  container "server-www-1" do
+  container "myapp-standalone-1" do
     distro        "ubuntu"
     release       "precise"
 
@@ -161,7 +162,35 @@ node :vagrant do
     end
   end
 
-  container "server-redis-1" do
+  container "myservice-standalone-2" do
+    distro        "ubuntu"
+    release       "precise"
+
+    provisioners  [
+      TestLab::Provisioner::Resolv,
+      TestLab::Provisioner::AptCacherNG,
+      TestLab::Provisioner::Apt,
+      TestLab::Provisioner::Shell
+    ]
+    config        ({
+      :script => shell_provision_script
+    })
+
+    user 'deployer' do
+      password  'deployer'
+      uid       2600
+      gid       2600
+    end
+
+    interface do
+      network_id  'labnet'
+      name        :eth0
+      address     '10.10.0.21/16'
+      mac         '00:00:5e:48:e9:6f'
+    end
+  end
+
+  container "myservice-standalone-3" do
     distro        "ubuntu"
     release       "precise"
 
