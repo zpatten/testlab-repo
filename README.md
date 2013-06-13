@@ -13,24 +13,27 @@ If you want to see what is going on during all of this; open another terminal, l
 
     $ tl setup
     [TL] TestLab v0.6.1 Loaded
-    [TL] node vagrant create                                     # Completed in 59.8709 seconds!
-    [TL] node vagrant up                                         # Completed in 1.9135 seconds!
-    [TL] node vagrant setup                                      # Completed in 86.4850 seconds!
-    [TL] network labnet create                                   # Completed in 0.1005 seconds!
-    [TL] network labnet up                                       # Completed in 0.1004 seconds!
-    [TL] network labnet setup                                    # Completed in 0.2052 seconds!
-    [TL] container chef-server create                            # Completed in 246.0947 seconds!
-    [TL] container chef-server up                                # Completed in 0.5031 seconds!
-    [TL] container chef-server setup                             # Completed in 27.1048 seconds!
-    [TL] container server-lb-1 create                            # Completed in 8.2647 seconds!
-    [TL] container server-lb-1 up                                # Completed in 0.5047 seconds!
-    [TL] container server-lb-1 setup                             # Completed in 22.1674 seconds!
-    [TL] container server-www-1 create                           # Completed in 8.4646 seconds!
-    [TL] container server-www-1 up                               # Completed in 0.5039 seconds!
-    [TL] container server-www-1 setup                            # Completed in 23.4809 seconds!
-    [TL] container server-redis-1 create                         # Completed in 8.1606 seconds!
-    [TL] container server-redis-1 up                             # Completed in 0.7053 seconds!
-    [TL] container server-redis-1 setup                          # Completed in 22.8762 seconds!
+    [TL] node vagrant create                                     # Completed in 61.8821 seconds!
+    [TL] node vagrant up                                         # Completed in 1.9162 seconds!
+    [TL] node vagrant setup                                      # Completed in 109.5569 seconds!
+    [TL] network labnet create                                   # Completed in 0.1008 seconds!
+    [TL] network labnet up                                       # Completed in 0.1005 seconds!
+    [TL] network labnet setup                                    # Completed in 0.1042 seconds!
+    [TL] container chef-server create                            # Completed in 260.1049 seconds!
+    [TL] container chef-server up                                # Completed in 0.4014 seconds!
+    [TL] container chef-server setup                             # Completed in 26.4069 seconds!
+    [TL] container server-lb-1 create                            # Completed in 8.1643 seconds!
+    [TL] container server-lb-1 up                                # Completed in 0.4036 seconds!
+    [TL] container server-lb-1 setup                             # Completed in 21.6694 seconds!
+    [TL] container server-www-1 create                           # Completed in 8.1603 seconds!
+    [TL] container server-www-1 up                               # Completed in 0.5035 seconds!
+    [TL] container server-www-1 setup                            # Completed in 21.4627 seconds!
+    [TL] container server-db-1 create                            # Completed in 8.1644 seconds!
+    [TL] container server-db-1 up                                # Completed in 0.4047 seconds!
+    [TL] container server-db-1 setup                             # Completed in 22.0673 seconds!
+    [TL] container server-redis-1 create                         # Completed in 8.1644 seconds!
+    [TL] container server-redis-1 up                             # Completed in 0.5044 seconds!
+    [TL] container server-redis-1 setup                          # Completed in 22.6304 seconds!
 
     $ tl status
     [TL] TestLab v0.6.1 Loaded
@@ -39,7 +42,7 @@ If you want to see what is going on during all of this; open another terminal, l
     +---------+----------------------------------+---------+---------+----------------+------+----------------------------+-----+-----+
     | ID      | INSTANCE_ID                      | STATE   | USER    | IP             | PORT | PROVIDER                   | CON | NET |
     +---------+----------------------------------+---------+---------+----------------+------+----------------------------+-----+-----+
-    | vagrant | testlab-repo-zpatten-zsp-desktop | running | vagrant | 192.168.33.239 | 22   | TestLab::Provider::Vagrant | 4   | 1   |
+    | vagrant | testlab-repo-zpatten-zsp-desktop | running | vagrant | 192.168.33.239 | 22   | TestLab::Provider::Vagrant | 5   | 1   |
     +---------+----------------------------------+---------+---------+----------------+------+----------------------------+-----+-----+
 
     NETWORKS:
@@ -82,12 +85,22 @@ If you want to see what is going on during all of this; open another terminal, l
     |  PROVISIONERS: Resolv/AptCacherNG/Apt/Shell  |
     +----------------------------------------------+
     |       NODE_ID: vagrant                       |
+    |            ID: server-db-1                   |
+    |         CLONE: false                         |
+    |          FQDN: server-db-1.default.zone      |
+    |         STATE: running                       |
+    |        DISTRO: ubuntu                        |
+    |       RELEASE: precise                       |
+    |    INTERFACES: labnet:eth0:10.10.0.22/16     |
+    |  PROVISIONERS: Resolv/AptCacherNG/Apt/Shell  |
+    +----------------------------------------------+
+    |       NODE_ID: vagrant                       |
     |            ID: server-redis-1                |
     |         CLONE: false                         |
     |          FQDN: server-redis-1.default.zone   |
     |         STATE: running                       |
     |        DISTRO: ubuntu                        |
     |       RELEASE: precise                       |
-    |    INTERFACES: labnet:eth0:10.10.0.22/16     |
+    |    INTERFACES: labnet:eth0:10.10.0.23/16     |
     |  PROVISIONERS: Resolv/AptCacherNG/Apt/Shell  |
     +----------------------------------------------+

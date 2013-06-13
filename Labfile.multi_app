@@ -185,7 +185,7 @@ node :vagrant do
     interface do
       network_id  'labnet'
       name        :eth0
-      address     '10.10.0.21/16'
+      address     '10.10.0.22/16'
       mac         '00:00:5e:48:e9:6f'
     end
   end
@@ -213,7 +213,7 @@ node :vagrant do
     interface do
       network_id  'labnet'
       name        :eth0
-      address     '10.10.0.22/16'
+      address     '10.10.0.23/16'
       mac         '00:00:5e:48:e9:2b'
     end
   end
