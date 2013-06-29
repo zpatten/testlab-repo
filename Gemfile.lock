@@ -1,17 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.13)
-      i18n (= 0.6.1)
-      multi_json (~> 1.0)
+    activesupport (4.0.0)
+      i18n (~> 0.6, >= 0.6.4)
+      minitest (~> 4.2)
+      multi_json (~> 1.3)
+      thread_safe (~> 0.1)
+      tzinfo (~> 0.3.37)
+    atomic (1.1.10)
     coderay (1.0.9)
     erubis (2.7.0)
-    gli (2.5.6)
-    i18n (0.6.1)
-    lxc (0.2.10)
+    gli (2.6.1)
+    i18n (0.6.4)
+    lxc (0.2.13)
       ztk
     method_source (0.8.1)
-    multi_json (1.7.6)
+    minitest (4.7.5)
+    multi_json (1.7.7)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.6.7)
@@ -20,12 +25,15 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     slop (3.4.5)
-    testlab (0.6.1)
+    testlab (0.6.12)
       activesupport
       gli
       lxc
       ztk
-    ztk (1.4.22)
+    thread_safe (0.1.0)
+      atomic
+    tzinfo (0.3.37)
+    ztk (1.6.1)
       activesupport
       erubis
       net-sftp
