@@ -43,9 +43,9 @@ node :vagrant do
   # the provider
   config      ({
     :vagrant => {
-      :id       => "testlab-repo-#{ENV['USER']}-#{HOSTNAME}".downcase,
-      :cpus     => 8,
-      :memory   => (4 * 1024.0).to_i,
+      :id       => "app-multi-#{HOSTNAME}".downcase,
+      :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
+      :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
       :box      => 'raring64',
       :file     => REPO
     }
