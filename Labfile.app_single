@@ -53,9 +53,9 @@ node :vagrant do
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network 'labnet' do
-    address  '10.10.0.1/16'
-    bridge   :br0
-    route    true
+    provisioners  [TestLab::Provisioner::Route]
+    address       '10.10.0.1/16'
+    bridge        :br0
   end
 
   # chef-server.default.zone

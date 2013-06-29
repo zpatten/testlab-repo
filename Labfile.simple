@@ -1,11 +1,9 @@
 #!/usr/bin/env ruby
 #^syntax detection
 
-# Labfile Example: Multiple Applications/Services
-##################################################
-# Each application/service is setup per container using a 'standalone' role;
-# that is all of it's dependent services should be installed and configured to
-# run on that container alone.
+# Labfile Simple Example
+#########################
+# This is a simple example that builds a lab with a chef-server and chef-client.
 
 shell_provision_script = <<-EOF
 set -x
@@ -43,7 +41,7 @@ node :vagrant do
   # the provider
   config      ({
     :vagrant => {
-      :id       => "app-multi-#{HOSTNAME}".downcase,
+      :id       => "simple-#{HOSTNAME}".downcase,
       :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
       :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
       :box      => 'raring64',
@@ -65,6 +63,12 @@ node :vagrant do
     distro        "ubuntu"
     release       "precise"
 
+    # provisioners   [
+    #   TestLab::Provisioner::Resolv,
+    #   TestLab::Provisioner::AptCacherNG,
+    #   TestLab::Provisioner::Apt,
+    #   TestLab::Provisioner::OmniTruck
+    # ]
     provisioners  [
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
@@ -100,6 +104,10 @@ node :vagrant do
     distro        "ubuntu"
     release       "precise"
 
+    # provisioners   [
+    #   TestLab::Provisioner::AptCacherNG,
+    #   TestLab::Provisioner::OmniBus
+    # ]
     provisioners  [
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
@@ -124,7 +132,7 @@ node :vagrant do
     end
   end
 
-  container "myapp-standalone-1" do
+  container "server-www-1" do
     distro        "ubuntu"
     release       "precise"
 
@@ -152,7 +160,7 @@ node :vagrant do
     end
   end
 
-  container "myservice-standalone-2" do
+  container "server-db-1" do
     distro        "ubuntu"
     release       "precise"
 
@@ -176,11 +184,11 @@ node :vagrant do
       network_id  'labnet'
       name        :eth0
       address     '10.10.0.22/16'
-      mac         '00:00:5e:48:e9:6f'
+      mac         '00:00:5e:48:e9:2b'
     end
   end
 
-  container "myservice-standalone-3" do
+  container "server-redis-1" do
     distro        "ubuntu"
     release       "precise"
 
