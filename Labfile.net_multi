@@ -70,12 +70,6 @@ node :vagrant do
     distro        "ubuntu"
     release       "precise"
 
-    # provisioners   [
-    #   TestLab::Provisioner::Resolv,
-    #   TestLab::Provisioner::AptCacherNG,
-    #   TestLab::Provisioner::Apt,
-    #   TestLab::Provisioner::OmniTruck
-    # ]
     provisioners  [
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
@@ -123,10 +117,6 @@ node :vagrant do
     distro        "ubuntu"
     release       "precise"
 
-    # provisioners   [
-    #   TestLab::Provisioner::AptCacherNG,
-    #   TestLab::Provisioner::OmniBus
-    # ]
     provisioners  [
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
