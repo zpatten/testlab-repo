@@ -5,12 +5,6 @@
 #########################
 # This is a simple example that builds a lab with a chef-server and chef-client.
 
-shell_provision_script = <<-EOF
-set -x
-apt-get -y update
-apt-get -y install dnsutils
-EOF
-
 REPO = Dir.pwd
 HOSTNAME = %x(hostname).split('.').first.strip
 
@@ -63,21 +57,12 @@ node :vagrant do
     distro        "ubuntu"
     release       "precise"
 
-    # provisioners   [
-    #   TestLab::Provisioner::Resolv,
-    #   TestLab::Provisioner::AptCacherNG,
-    #   TestLab::Provisioner::Apt,
-    #   TestLab::Provisioner::OmniTruck
-    # ]
-    provisioners  [
+    provisioners   [
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
-      TestLab::Provisioner::Shell
+      TestLab::Provisioner::Chef::OmniTruck
     ]
-    config        ({
-      :script => shell_provision_script
-    })
 
     # Here we define a default user to seed onto the box.  This user will be
     # given passwordless sudo access as well.
@@ -100,23 +85,18 @@ node :vagrant do
     end
   end
 
-  container "server-lb-1" do
+  # chef-client.default.zone
+  ###########################
+  container "chef-client" do
     distro        "ubuntu"
     release       "precise"
 
-    # provisioners   [
-    #   TestLab::Provisioner::AptCacherNG,
-    #   TestLab::Provisioner::OmniBus
-    # ]
     provisioners  [
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
-      TestLab::Provisioner::Shell
+      TestLab::Provisioner::Chef::OmniBus
     ]
-    config        ({
-      :script => shell_provision_script
-    })
 
     user 'deployer' do
       password  'deployer'
@@ -129,90 +109,6 @@ node :vagrant do
       name        :eth0
       address     '10.10.0.20/16'
       mac         '00:00:5e:b7:e5:15'
-    end
-  end
-
-  container "server-www-1" do
-    distro        "ubuntu"
-    release       "precise"
-
-    provisioners  [
-      TestLab::Provisioner::Resolv,
-      TestLab::Provisioner::AptCacherNG,
-      TestLab::Provisioner::Apt,
-      TestLab::Provisioner::Shell
-    ]
-    config        ({
-      :script => shell_provision_script
-    })
-
-    user 'deployer' do
-      password  'deployer'
-      uid       2600
-      gid       2600
-    end
-
-    interface do
-      network_id  'labnet'
-      name        :eth0
-      address     '10.10.0.21/16'
-      mac         '00:00:5e:48:e9:6f'
-    end
-  end
-
-  container "server-db-1" do
-    distro        "ubuntu"
-    release       "precise"
-
-    provisioners  [
-      TestLab::Provisioner::Resolv,
-      TestLab::Provisioner::AptCacherNG,
-      TestLab::Provisioner::Apt,
-      TestLab::Provisioner::Shell
-    ]
-    config        ({
-      :script => shell_provision_script
-    })
-
-    user 'deployer' do
-      password  'deployer'
-      uid       2600
-      gid       2600
-    end
-
-    interface do
-      network_id  'labnet'
-      name        :eth0
-      address     '10.10.0.22/16'
-      mac         '00:00:5e:48:e9:2b'
-    end
-  end
-
-  container "server-redis-1" do
-    distro        "ubuntu"
-    release       "precise"
-
-    provisioners  [
-      TestLab::Provisioner::Resolv,
-      TestLab::Provisioner::AptCacherNG,
-      TestLab::Provisioner::Apt,
-      TestLab::Provisioner::Shell
-    ]
-    config        ({
-      :script => shell_provision_script
-    })
-
-    user 'deployer' do
-      password  'deployer'
-      uid       2600
-      gid       2600
-    end
-
-    interface do
-      network_id  'labnet'
-      name        :eth0
-      address     '10.10.0.23/16'
-      mac         '00:00:5e:48:e9:2b'
     end
   end
 
