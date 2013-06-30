@@ -12,7 +12,7 @@ GEM
     erubis (2.7.0)
     gli (2.6.1)
     i18n (0.6.4)
-    lxc (0.2.13)
+    lxc (0.3.2)
       ztk
     method_source (0.8.1)
     minitest (4.7.5)
@@ -25,7 +25,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     slop (3.4.5)
-    testlab (0.6.12)
+    testlab (0.6.16)
       activesupport
       gli
       lxc
@@ -33,7 +33,7 @@ GEM
     thread_safe (0.1.0)
       atomic
     tzinfo (0.3.37)
-    ztk (1.6.1)
+    ztk (1.6.2)
       activesupport
       erubis
       net-sftp
