@@ -35,7 +35,7 @@ node :vagrant do
   # the provider
   config      ({
     :vagrant => {
-      :id       => "simple-#{HOSTNAME}".downcase,
+      :id       => "chef-omni-#{HOSTNAME}".downcase,
       :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
       :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
       :box      => 'raring64',
