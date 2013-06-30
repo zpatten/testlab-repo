@@ -1,6 +1,28 @@
 #!/usr/bin/env ruby
 #^syntax detection
 ################################################################################
+# RUBYGEM DEVELOPMENT PATTERN
+#
+# This pattern allows easy development of dependent RubyGems without having to
+# resort to any crazy "magic".
+#
+# To use this pattern, define the gem you wish to develop with using the
+# 'gem_dev' method instead of the usual 'gem' method.  Then clone said gems
+# source under the 'vender/checkouts' directory of this repository.
+#
+# Once you have these two items complete; you can then declare "GEMDEV=1" via
+# your environment and this will cause the Gemfile to switch the gem source
+# from the standard RubyGems/private repositories to using a ':path' option
+# pointing to the source under 'vendor/checkouts' which will cause bundler to
+# use your local copy of the gem allowing you to perform changes on the gems
+# source in real-time.
+#
+# Additionally if you want the 'Gemfile' to be verbose and let you know what
+# it's doing you can declare "VERBOSE=1" in your environment.
+#
+# Under normal circumstances the 'Gemfile' and 'gem_dev' methods will function
+# as if you had defined the gems using the 'gem' method.
+################################################################################
 def gem_dev(gem_name, *args)
   verbose = (ENV['VERBOSE'] == "1")
   gemdev = (ENV['GEMDEV'] == "1")
