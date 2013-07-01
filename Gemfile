@@ -53,3 +53,6 @@ gem_dev "lxc"
 gem_dev "ztk"
 
 gem "pry"
+
+gem "activesupport", "< 4.0.0" if (RUBY_VERSION < "1.9.3")
+gem "json" if (RUBY_VERSION == "1.8.7")
