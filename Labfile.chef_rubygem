@@ -1,17 +1,10 @@
 #!/usr/bin/env ruby
 #^syntax detection
+require 'socket'
 
 # Labfile Simple Example
 #########################
 # This is a simple example that builds a lab with a chef-server and chef-client.
-
-REPO = Dir.pwd
-HOSTNAME = %x(hostname).split('.').first.strip
-
-config ({
-  :domain => "default.zone",
-  :repo => REPO
-})
 
 # Here we define our node; in this case we are using the localhost.  We've
 # selected the Vagrant provider so the Vagrant VM will be our target LXC node.
@@ -35,11 +28,14 @@ node :vagrant do
   # the provider
   config      ({
     :vagrant => {
-      :id       => "chef-rubygem-#{HOSTNAME}".downcase,
+      :id       => "chef-rubygem-#{Socket.gethostname.split('.').first.strip}".downcase,
       :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
       :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
       :box      => 'raring64',
-      :file     => REPO
+      :file     => Dir.pwd
+    },
+    :bind => {
+      :domain => "default.zone"
     }
   })
 
