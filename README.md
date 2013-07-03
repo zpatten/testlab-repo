@@ -85,25 +85,28 @@ Example `Labfile.chef_rubygem`:
         tl [global options] command [command options] [arguments...]
 
     VERSION
-        0.6.17
+        0.8.1
 
     GLOBAL OPTIONS
-        -l, --labfile=path/to/file - Path to Labfile (default: /home/zpatten/Dropbox/code/personal/testlab-repo/Labfile)
-        --version                  - Display the program version
-        -v, --[no-]verbose         - Show verbose output
-        -q, --[no-]quiet           - Quiet mode
-        --help                     - Show this message
+        -l, --labfile=path/to/file     - Path to Labfile: ${REPO}/Labfile (default: none)
+        -r, --repo=path/to/directory   - Path to Repository directory: ${PWD} (default: /home/zpatten/code/personal/testlab-repo)
+        -c, --config=path/to/directory - Path to Configuration directory: ${REPO}/.testlab-$(hostname -s) (default: none)
+        --version                      - Display the program version
+        -v, --[no-]verbose             - Show verbose output
+        -q, --[no-]quiet               - Quiet mode
+        --help                         - Show this message
 
     COMMANDS
         help      - Shows a list of commands or help for one command
-        container - Manage containers
-        network   - Manage networks
-        node      - Manage nodes
-        create    - Create the test lab
-        destroy   - Destroy the test lab
-        up        - Online the test lab
-        down      - Offline the test lab
-        setup     - Setup the test lab infrastructure
-        teardown  - Teardown the test lab infrastructure
-        build     - Build the test lab infrastructure
-        status    - Display information on the status of the test lab
+        container - Manage lab containers
+        network   - Manage lab networks
+        node      - Manage lab nodes
+        create    - Create the lab components
+        destroy   - Destroy the lab components
+        up        - On-line the lab components
+        down      - Off-line the lab components
+        setup     - Provision the lab components
+        teardown  - De-provision the lab components
+        build     - Build the lab
+        demolish  - Demolish the lab
+        status    - Display the lab status
