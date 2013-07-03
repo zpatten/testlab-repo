@@ -7,33 +7,22 @@
 
 # Here we define our node; in this case we are using the localhost.  We've
 # selected the Vagrant provider so the Vagrant VM will be our target LXC node.
-node 'vagrant' do
+node 'local' do
 
   # This sets the provider for our node.  This could be many things, from
   # Vagrant, to AWS, to Local, to custom internal providers.  Any class can be
   # supplied assuming it's interface honors our contract.
-  provider      TestLab::Provider::Vagrant
+  provider      TestLab::Provider::Local
 
   # These are provisioners that only need to run against the node (i.e. they
   # do not have any container components).  Provisioner classes applied to
   # containers only are automatically interogated and executed during runtime
   # if they have a node component.
-  provisioners  [
-    TestLab::Provisioner::Raring,
-    TestLab::Provisioner::Bind
-  ]
+  provisioners  [TestLab::Provisioner::Raring]
 
   # this is a generic configuration object (hash) which is supplied to
   # the provider
   config      ({
-    :vagrant => {
-      :id       => "chef-rubygem-#{TestLab.hostname}".downcase,
-      :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
-      :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
-      :box      => 'raring64',
-      :box_url  => 'https://dl.dropboxusercontent.com/u/22904185/boxes/raring64.box',
-      :file     => File.dirname(__FILE__)
-    },
     :bind => {
       :domain => "default.zone"
     }
@@ -42,7 +31,6 @@ node 'vagrant' do
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network 'labnet' do
-    provisioners  [TestLab::Provisioner::Route]
     address       '10.10.0.1/16'
     bridge        :br0
   end
@@ -54,7 +42,6 @@ node 'vagrant' do
     release       "precise"
 
     provisioners   [
-      TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
       TestLab::Provisioner::Chef::RubyGemServer
@@ -90,7 +77,6 @@ node 'vagrant' do
     release       "precise"
 
     provisioners  [
-      TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
       TestLab::Provisioner::Chef::RubyGemClient

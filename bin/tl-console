@@ -1,4 +1,6 @@
 #!/bin/env ruby
+require 'rubygems'
+require 'bundler/setup'
 require 'pry'
 require 'testlab'
 
@@ -8,6 +10,7 @@ logger = ZTK::Logger.new(log_file)
 
 ui = ZTK::UI.new(:logger => logger) # ui interface class
 l = TestLab.new(:ui => ui)          # lab
+l.boot                              # boot the lab
 n = l.nodes.first                   # node
 c1 = TestLab::Container.first('server-east-1')
 c2 = TestLab::Container.first('server-west-1')

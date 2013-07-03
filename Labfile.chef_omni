@@ -1,18 +1,13 @@
 #!/usr/bin/env ruby
 #^syntax detection
-require 'socket'
 
 # Labfile Simple Example
 #########################
 # This is a simple example that builds a lab with a chef-server and chef-client.
 
-unless const_defined?(:HOSTNAME)
-  HOSTNAME = %x(hostname).split('.').first.strip
-end
-
 # Here we define our node; in this case we are using the localhost.  We've
 # selected the Vagrant provider so the Vagrant VM will be our target LXC node.
-node :vagrant do
+node 'vagrant' do
 
   # This sets the provider for our node.  This could be many things, from
   # Vagrant, to AWS, to Local, to custom internal providers.  Any class can be
@@ -32,11 +27,12 @@ node :vagrant do
   # the provider
   config      ({
     :vagrant => {
-      :id       => "chef-omni-#{Socket.gethostname.split('.').first.strip}".downcase,
+      :id       => "chef-omni-#{TestLab.hostname}".downcase,
       :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
       :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
       :box      => 'raring64',
-      :file     => Dir.pwd
+      :box_url  => 'https://dl.dropboxusercontent.com/u/22904185/boxes/raring64.box',
+      :file     => File.dirname(__FILE__)
     },
     :bind => {
       :domain => "default.zone"
