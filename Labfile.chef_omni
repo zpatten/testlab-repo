@@ -62,7 +62,8 @@ node 'vagrant' do
 
     # Here we define a default user to seed onto the box.  This user will be
     # given passwordless sudo access as well.
-    user 'deployer' do
+    user do
+      username  'deployer'
       password  'deployer'
       uid       2600
       gid       2600
@@ -94,7 +95,8 @@ node 'vagrant' do
       TestLab::Provisioner::Chef::OmniBus
     ]
 
-    user 'deployer' do
+    user do
+      username  'deployer'
       password  'deployer'
       uid       2600
       gid       2600

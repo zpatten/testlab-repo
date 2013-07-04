@@ -21,12 +21,12 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     slop (3.4.5)
-    testlab (0.8.1)
+    testlab (0.8.3)
       activesupport
       gli
       lxc
       ztk
-    ztk (1.6.15)
+    ztk (1.6.20)
       activesupport
       erubis
       net-sftp

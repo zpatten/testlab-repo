@@ -62,7 +62,8 @@ node 'vagrant' do
 
     # Here we define a default user to seed onto the box.  This user will be
     # given passwordless sudo access as well.
-    user 'deployer' do
+    user do
+      username         'deployer'
       password         'deployer'
       identity         File.join(ENV['HOME'], '.ssh', 'id_rsa')
       public_identity  File.join(ENV['HOME'], '.ssh', 'id_rsa.pub')
@@ -96,7 +97,8 @@ node 'vagrant' do
       TestLab::Provisioner::Chef::RubyGemClient
     ]
 
-    user 'deployer' do
+    user do
+      username         'deployer'
       password         'deployer'
       identity         File.join(ENV['HOME'], '.ssh', 'id_rsa')
       public_identity  File.join(ENV['HOME'], '.ssh', 'id_rsa.pub')
