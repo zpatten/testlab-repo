@@ -20,7 +20,9 @@ node 'vagrant' do
   # if they have a node component.
   provisioners  [
     TestLab::Provisioner::Raring,
-    TestLab::Provisioner::Bind
+    TestLab::Provisioner::AptCacherNG,
+    TestLab::Provisioner::Bind,
+    TestLab::Provisioner::Resolv
   ]
 
   # this is a generic configuration object (hash) which is supplied to
@@ -33,18 +35,18 @@ node 'vagrant' do
       :box      => 'raring64',
       :box_url  => 'https://dl.dropboxusercontent.com/u/22904185/boxes/raring64.box',
       :file     => File.dirname(__FILE__)
-    },
-    :bind => {
-      :domain => "default.zone"
     }
   })
 
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network 'labnet' do
-    provisioners  [TestLab::Provisioner::Route]
+    provisioners  [
+      TestLab::Provisioner::Route,
+      TestLab::Provisioner::Bind
+    ]
     address       '10.10.0.1/16'
-    bridge        :br0
+    bridge        'br0'
   end
 
   # chef-server.default.zone
@@ -78,7 +80,7 @@ node 'vagrant' do
     # the primary interface.
     interface do
       network_id  'labnet'
-      name        :eth0
+      name        'eth0'
       address     '10.10.0.254/16'
       mac         '00:00:5e:63:b5:9f'
     end
@@ -108,7 +110,7 @@ node 'vagrant' do
 
     interface do
       network_id  'labnet'
-      name        :eth0
+      name        'eth0'
       address     '10.10.0.20/16'
       mac         '00:00:5e:b7:e5:15'
     end

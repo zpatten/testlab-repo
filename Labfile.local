@@ -18,19 +18,29 @@ node 'local' do
   # do not have any container components).  Provisioner classes applied to
   # containers only are automatically interogated and executed during runtime
   # if they have a node component.
-  provisioners  [TestLab::Provisioner::Raring]
+  provisioners  [
+    TestLab::Provisioner::Raring,
+    TestLab::Provisioner::AptCacherNG,
+    TestLab::Provisioner::Bind,
+    TestLab::Provisioner::Resolv
+  ]
 
   # this is a generic configuration object (hash) which is supplied to
   # the provider
-  config      ({
-    :bind => {
-      :domain => "default.zone"
-    }
-  })
+  # config      ({
+  #   :local => {
+  #     :user => "lxc-user",
+  #     :identity => File.join('', 'path', 'to', 'my', 'ssh', 'identity')
+  #   }
+  # })
 
   # Here we define our network segments; these will manifest into network
   # bridges on the target LXC node.
   network 'labnet' do
+    provisioners  [
+      TestLab::Provisioner::Route,
+      TestLab::Provisioner::Bind
+    ]
     address       '10.10.0.1/16'
     bridge        :br0
   end
@@ -42,6 +52,7 @@ node 'local' do
     release       "precise"
 
     provisioners   [
+      TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
       TestLab::Provisioner::Chef::RubyGemServer
@@ -78,6 +89,7 @@ node 'local' do
     release       "precise"
 
     provisioners  [
+      TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
       TestLab::Provisioner::Chef::RubyGemClient
