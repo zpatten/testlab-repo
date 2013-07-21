@@ -21,7 +21,7 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     slop (3.4.5)
-    testlab (1.2.0)
+    testlab (1.2.1)
       activesupport
       gli
       lxc
