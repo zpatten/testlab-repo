@@ -3,4 +3,5 @@ vendor/checkouts
 .vagrant
 test.rb
 Vagrantfile
+Labfile
 *.sc
