@@ -12,6 +12,9 @@ apt-get -y update
 apt-get -y install dnsutils
 EOF
 
+# this Labfile requires TestLab >= v1.11.0
+version '>= 1.11.0'
+
 # Here we define our node; in this case we are using the localhost.  We've
 # selected the Vagrant provider so the Vagrant VM will be our target LXC node.
 node 'vagrant' do
@@ -23,7 +26,7 @@ node 'vagrant' do
 
   # These are provisioners that only need to run against the node (i.e. they
   # do not have any container components).  Provisioner classes applied to
-  # containers only are automatically interogated and executed during runtime
+  # containers are automatically interrogated and executed during runtime
   # if they have a node component.
   provisioners  [
     TestLab::Provisioner::Raring,
@@ -40,7 +43,6 @@ node 'vagrant' do
       :cpus     => ZTK::Parallel::MAX_FORKS.div(2),                    # use half of the available processors
       :memory   => ZTK::Parallel::MAX_MEMORY.div(3).div(1024 * 1024),  # use a third of available RAM
       :box      => 'raring64',
-      :box_url  => 'https://dl.dropboxusercontent.com/u/22904185/boxes/raring64.box',
       :file     => File.dirname(__FILE__)
     }
   })
@@ -72,6 +74,7 @@ node 'vagrant' do
     release       "precise"
 
     provisioners  [
+      TestLab::Provisioner::HostsFile,
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
@@ -120,6 +123,7 @@ node 'vagrant' do
     release       "precise"
 
     provisioners  [
+      TestLab::Provisioner::HostsFile,
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
@@ -153,6 +157,7 @@ node 'vagrant' do
     release       "precise"
 
     provisioners  [
+      TestLab::Provisioner::HostsFile,
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,

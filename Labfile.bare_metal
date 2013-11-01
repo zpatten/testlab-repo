@@ -5,18 +5,21 @@
 #########################
 # This is a simple example that builds a lab with a chef-server and chef-client.
 
+# this Labfile requires TestLab >= v1.11.0
+version '>= 1.11.0'
+
 # Here we define our node; in this case we are using the localhost.  We've
 # selected the Vagrant provider so the Vagrant VM will be our target LXC node.
-node 'local' do
+node 'bare_metal' do
 
   # This sets the provider for our node.  This could be many things, from
-  # Vagrant, to AWS, to Local, to custom internal providers.  Any class can be
+  # Vagrant, to AWS, to BareMetal, to custom internal providers.  Any class can be
   # supplied assuming it's interface honors our contract.
-  provider      TestLab::Provider::Local
+  provider      TestLab::Provider::BareMetal
 
   # These are provisioners that only need to run against the node (i.e. they
   # do not have any container components).  Provisioner classes applied to
-  # containers only are automatically interogated and executed during runtime
+  # containers are automatically interrogated and executed during runtime
   # if they have a node component.
   provisioners  [
     TestLab::Provisioner::Raring,
@@ -28,7 +31,7 @@ node 'local' do
   # this is a generic configuration object (hash) which is supplied to
   # the provider
   # config      ({
-  #   :local => {
+  #   :bare_metal => {
   #     :user => "lxc-user",
   #     :identity => File.join('', 'path', 'to', 'my', 'ssh', 'identity')
   #   }
@@ -52,6 +55,7 @@ node 'local' do
     release       "precise"
 
     provisioners   [
+      TestLab::Provisioner::HostsFile,
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
@@ -89,6 +93,7 @@ node 'local' do
     release       "precise"
 
     provisioners  [
+      TestLab::Provisioner::HostsFile,
       TestLab::Provisioner::Resolv,
       TestLab::Provisioner::AptCacherNG,
       TestLab::Provisioner::Apt,
